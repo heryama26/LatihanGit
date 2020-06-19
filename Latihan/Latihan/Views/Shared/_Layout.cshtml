@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Belajar Fotografi</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <style>
+
+        .hero-image {
+          background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), Url(../Content/Image/2.jpg);
+          height: 50%;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          position: relative;
+        }
+        .bg-image {
+            /* Add the blur effect */
+            filter: blur(8px);
+            -webkit-filter: blur(8px);
+        }
+        .hero-text {
+          text-align: center;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: white;
+        }
+    </style>
+</head>
+<body style="padding-top:0px">
+    <header id="masthead" class="site-header grid-container grid-parent">
+        <div class="inside-header grid-container grid-parent">
+
+            <div class="hero-image" style="height:150px">
+                <div class="hero-text">
+                <a href="/Home" rel="home" style="text-decoration: none;"> 
+                     <h1 style="text-align:center;font-weight:700;font-family:Lucida;color:white;line-height: 1.2em;margin-bottom:30px;">Blog Fotografi </h1>
+                </a>
+                </div>
+            </div>  
+        </div>
+    </header>
+    
+    <!-- Navigasi -->
+    <div class="navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>*@
+                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Portfolio","Index","Portfolio", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("About","Index","About", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            @*<div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+            </div>*@
+        </div>
+    </div>
+    <!-- content -->
+
+    <div class="container body-content" style="height:auto">
+        @RenderBody()
+        
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+
+    <!-- footer -->
+    <div class="container navbar-inverse">
+        <footer>
+            <p style="color:white;text-align:center;">&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+        
+</html>
