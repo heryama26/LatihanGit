@@ -19,7 +19,7 @@
         WebMail.From = "heryanakasih@gmail.com";
         WebMail.EnableSsl = true;
         // Send email
-        WebMail.Send(to: "heryanakasih@gmail.com",
+        WebMail.Send(to: "",
             subject: "Help request from - " + customerName + " [Email Address: " + customerEmail+"]",
             body: customerRequest
         );
@@ -34,6 +34,10 @@
   <title>Request for Assistance</title>
 </head>
 <body>
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert" onclick="window.location.href='/About';">&times;</button>
+    <strong>Success!</strong> Indicates a successful or positive action.
+
   <p>Sorry to hear that you are having trouble, <b>@customerName</b>.</p>
     @if(errorMessage == ""){
       <p>An email message has been sent to our customer service
@@ -51,6 +55,7 @@
             <p><em>@errorMessage</em></p>
         }
     }
-    <button type="button" class="btn btn-danger" id="btnCancel" onclick="window.location.href='/About';">Back</button>
+    @*<button type="button" class="btn btn-danger" id="btnCancel" onclick="window.location.href='/About';">Back</button>*@
+        </div>
 </body>
 </html>

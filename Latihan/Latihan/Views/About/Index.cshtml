@@ -5,6 +5,92 @@
     ViewBag.Title = "About";
 }
 
+<script>
+    $(document).ready(function () {
+        //jQuery code goes here
+
+        // Name can't be blank
+        $('#name').on('input', function () {
+            var input = $(this);
+            var is_name = input.val();
+            if (is_name) { input.removeClass("invalid").addClass("valid"); }
+            else { input.removeClass("valid").addClass("invalid"); }
+        });
+
+        // Email must be an email
+        $('#email').on('input', function () {
+            var input = $(this);
+            var re = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var is_email = re.test(input.val());
+            if (is_email) { input.removeClass("invalid").addClass("valid"); }
+            else { input.removeClass("valid").addClass("invalid"); }
+        });
+
+        //Message can't be blank
+        $('#subject').keyup(function(event) {
+            var input=$(this);
+            var message=$(this).val();
+            if(message){input.removeClass("invalid").addClass("valid");}
+            else{input.removeClass("valid").addClass("invalid");}	
+        });
+
+        // After Form Submitted Validation
+        $("#contact_submit button").click(function (event) {
+            $("#modalContactUs").modal("hide");
+            var form_data = $("#ContactUs").serializeArray();
+            var error_free = true;
+            for (var input in form_data) {
+                var element = $("#" + form_data[input]['name']);
+                var valid = element.hasClass("valid");
+                var error_element = $("span", element.parent());
+                if (!valid) {
+                    error_element.removeClass("error").addClass("error_show"); error_free = false;
+                }
+                else {
+                    error_element.removeClass("error_show").addClass("error");
+                }
+            }
+            if (!error_free) {
+                event.preventDefault();
+            }
+            else {
+                //alert('No errors: Form will be submitted
+                ProcessReq();
+                $(".alert").show();
+                setTimeout(function () { $(".alert").hide(); }, 3000);
+            }
+        });
+
+    });
+
+    function ProcessReq() {
+        @{
+        var customerName = Request["name"];
+        var customerEmail = Request["email"];
+        var customerRequest = Request["subject"];
+        var errorMessage = "";
+        var debuggingFlag = false;
+        try {
+            // Initialize WebMail helper
+            WebMail.SmtpServer = "smtp.gmail.com";
+            WebMail.SmtpPort = 587;
+            WebMail.UserName = "heryanakasih@gmail.com";
+            WebMail.Password = "teizluhdljeuzorf";
+            WebMail.From = "heryanakasih@gmail.com";
+            WebMail.EnableSsl = true;
+            // Send email
+            WebMail.Send(to: "heryanakasih@gmail.com",
+            subject: "Help request from - " + customerName + " [Email Address: " + customerEmail+"]",
+            body: customerRequest
+            );
+        }
+        catch (Exception ex ) {
+            errorMessage = ex.Message;
+        }
+        }
+    }
+</script>
+
 <style>
     /* Container needed to position the overlay. Adjust the width as needed */
   .foto {
@@ -123,7 +209,37 @@ input[type=submit]:hover {
     input.valid, textarea.valid{
 	border: 2px solid green;
     }
+
+    .alert {
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    display:inline-block;
+    height:300px;
+    z-index:1000;
+    width:200px;
+    }
 </style>
+
+<!--ALERT MESSAGE-->
+<div class="alert alert-success" style="display:none" id="dialog">
+    <button type="button" class="close">&times;</button>
+    <strong>Success!</strong> Indicates a successful or positive action.
+
+    <p>Sorry to hear that you are having trouble, <b>@customerName</b>.</p>
+    <p>An email message has been sent to our customer service
+         department regarding the following problem:</p>
+      <p><b>@customerRequest</b></p>
+        @if(debuggingFlag){
+            <p>The following error was reported:</p>
+            <p><em>@errorMessage</em></p>
+        }
+
+    @*<button type="button" class="btn btn-danger" id="btnCancel" onclick="window.location.href='/About';">Back</button>*@
+</div>
 
 <h2>About</h2>
 
@@ -137,6 +253,8 @@ input[type=submit]:hover {
     <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalContactUs"> <p>    <i class="fa fa-envelope icon"></i> heryanakasih@gmail.com</p> </a>
 </div>
 <hr />
+
+
 
 <div class="modal fade" id="modalContactUs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -153,7 +271,7 @@ input[type=submit]:hover {
 
   <div class="row">
     <div class="column" style="width:700px">
-      <form id="ContactUs" method="post" action="About/ProcessRequest">
+      <form id="ContactUs" method="post" @*action="About/ProcessRequest"*@">
           <div>
             <i class="fa fa-user icon"></i> <label for="fname">Name</label>
             <br />
@@ -175,7 +293,7 @@ input[type=submit]:hover {
           </div>
           
           <div id="contact_submit">
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-success">Submit</button>
           </div>
       
       </form>
@@ -187,59 +305,5 @@ input[type=submit]:hover {
   </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        //jQuery code goes here
 
-        // Name can't be blank
-        $('#name').on('input', function () {
-            var input = $(this);
-            var is_name = input.val();
-            if (is_name) { input.removeClass("invalid").addClass("valid"); }
-            else { input.removeClass("valid").addClass("invalid"); }
-        });
 
-        // Email must be an email
-        $('#email').on('input', function () {
-            var input = $(this);
-            var re = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            var is_email = re.test(input.val());
-            if (is_email) { input.removeClass("invalid").addClass("valid"); }
-            else { input.removeClass("valid").addClass("invalid"); }
-        });
-
-        //Message can't be blank
-        $('#subject').keyup(function(event) {
-            var input=$(this);
-            var message=$(this).val();
-            console.log(message);
-            if(message){input.removeClass("invalid").addClass("valid");}
-            else{input.removeClass("valid").addClass("invalid");}	
-        });
-
-        // After Form Submitted Validation
-        $("#contact_submit button").click(function (event) {
-            var form_data = $("#ContactUs").serializeArray();
-            var error_free = true;
-            for (var input in form_data) {
-                var element = $("#" + form_data[input]['name']);
-                var valid = element.hasClass("valid");
-                var error_element = $("span", element.parent());
-                if (!valid) {
-                    error_element.removeClass("error").addClass("error_show"); error_free = false;
-                }
-                else {
-                    error_element.removeClass("error_show").addClass("error");
-                }
-            }
-            if (!error_free) {
-                event.preventDefault();
-            }
-            else {
-                alert('No errors: Form will be submitted');
-            }
-        });
-
-    });
-
-</script>
