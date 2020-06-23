@@ -8,35 +8,38 @@
 <script>
     $(document).ready(function () {
         //jQuery code goes here
+        //function validation() {
+        //    var flagErr = 0
+            // Name can't be blank
+            $('#name').on('input', function inputname() {
+                var input = $(this);
+                var is_name = input.val();
+                if (is_name) { input.removeClass("invalid").addClass("valid"); }
+                else { input.removeClass("valid").addClass("invalid"); }
+            });
 
-        // Name can't be blank
-        $('#name').on('input', function () {
-            var input = $(this);
-            var is_name = input.val();
-            if (is_name) { input.removeClass("invalid").addClass("valid"); }
-            else { input.removeClass("valid").addClass("invalid"); }
-        });
+            // Email must be an email
+            $('#email').on('input', function inputemail() {
+                var input = $(this);
+                var re = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var is_email = re.test(input.val());
+                if (is_email) { input.removeClass("invalid").addClass("valid"); }
+                else { input.removeClass("valid").addClass("invalid"); }
+            });
 
-        // Email must be an email
-        $('#email').on('input', function () {
-            var input = $(this);
-            var re = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            var is_email = re.test(input.val());
-            if (is_email) { input.removeClass("invalid").addClass("valid"); }
-            else { input.removeClass("valid").addClass("invalid"); }
-        });
+            //Message can't be blank
+            $('#subject').keyup(function inputmessage(event) {
+                var input = $(this);
+                var message = $(this).val();
+                if (message) { input.removeClass("invalid").addClass("valid"); }
+                else { input.removeClass("valid").addClass("invalid"); }
+            });
 
-        //Message can't be blank
-        $('#subject').keyup(function(event) {
-            var input=$(this);
-            var message=$(this).val();
-            if(message){input.removeClass("invalid").addClass("valid");}
-            else{input.removeClass("valid").addClass("invalid");}	
-        });
+        //    return flagErr
+        //}
 
         // After Form Submitted Validation
         $("#contact_submit button").click(function (event) {
-            $("#modalContactUs").modal("hide");
             var form_data = $("#ContactUs").serializeArray();
             var error_free = true;
             for (var input in form_data) {
@@ -48,6 +51,7 @@
                 }
                 else {
                     error_element.removeClass("error_show").addClass("error");
+                    $("#modalContactUs").modal("hide");
                 }
             }
             if (!error_free) {
