@@ -1,15 +1,16 @@
-﻿@using Latihan.Models;
-@model IEnumerable<Latihan.Models.Person>
-
+﻿
 @{
     ViewBag.Title = "About";
+    string customerName = (string)ViewData["customerName"];
+    string errorMessage = (string)ViewData["errorMessage"];
+    string customerRequest = (string)ViewData["customerRequest"];
 }
 <style>
     /* Container needed to position the overlay. Adjust the width as needed */
   .foto {
   position: relative;
   width: 50%;
-  max-width: 300px;
+  margin: 0 auto;
 }
 
   /* The overlay effect - lays on top of the container and over the image */
@@ -19,14 +20,14 @@
   background: rgb(0, 0, 0);
   background: rgba(0, 0, 0, 0.5); /* Black see-through */
   color: #f1f1f1; 
-  width: 50%;
+  width: 30%;
   transition: .5s ease;
   opacity:0;
   color: white;
   font-size: 11px;
-  padding: 10px;
+  padding: 5px;
   text-align: center;
-    margin-left: 500px;
+  margin: 0 auto;
 }
 /* When you mouse over the container, fade in the overlay title */
 .foto:hover .overlay {
@@ -36,8 +37,8 @@
 .image {
   height: auto;
   display: block;
-  margin-left: 500px;
-  width: 50%;
+  width: 30%;
+  margin: 0 auto;
 }
 
 body {
@@ -141,12 +142,12 @@ input[type=submit]:hover {
 
 <div class="foto">
   <img src="~/Content/Image/img_avatar.png" alt="Avatar" class="image">
-  <div class="overlay">My Name is Heryana</div>
+  <div style="margin-left: 35%" class="overlay">My Name is Heryana</div>
 </div>
 
 <div style="text-align:center;">
-    <h2>Heryana K Setiawan</h2>
-    <a href="#" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalContactUs"> <p>    <i class="fa fa-envelope icon"></i> heryanakasih@gmail.com</p> </a>
+    @*<h2 style="margin-top:0px">Heryana K Setiawan</h2>*@
+    <a href="#" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalContactUs" id="emailhery"> <p>    <i class="fa fa-envelope icon"></i> heryanakasih@gmail.com</p> </a>
 </div>
 <hr />
 
@@ -165,7 +166,7 @@ input[type=submit]:hover {
 
   <div class="row">
     <div class="column" style="width:700px">
-      <form id="ContactUs" method="post" @*action="About/ProcessRequest"*@">
+      <form id="ContactUs" method="post" action="About/Action">
           <div>
             <i class="fa fa-user icon"></i> <label for="fname">Name</label>
             <br />
@@ -187,7 +188,7 @@ input[type=submit]:hover {
           </div>
           
           <div id="contact_submit">
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button id="btn_submit" type="submit" class="btn btn-success">Submit</button>
           </div>
       
       </form>
@@ -202,7 +203,9 @@ input[type=submit]:hover {
 
 
 <script>
-    $(document).ready(function () {
+    var stat = "a";
+
+  $(document).ready(function () {
         //jQuery code goes here
         
             // Name can't be blank
@@ -231,7 +234,7 @@ input[type=submit]:hover {
             });
 
         // After Form Submitted Validation
-        $("#contact_submit button").click(function (event) {
+            $("#btn_submit").click(function (event) {
             var form_data = $("#ContactUs").serializeArray();
             var error_free = true;
             for (var input in form_data) {
@@ -251,50 +254,25 @@ input[type=submit]:hover {
             }
             else {
                 //alert('No errors: Form will be submitted
-                $(".alert").show();
-                setTimeout(function () { $(".alert").hide(); }, 3000);
-                ProcessReq();
+                
             }
         });
 
         $("#klosalert").click(function () {
             $(".alert").hide();
         });
-    });
 
-    function ProcessReq (){
-    @{
-        var customerName = Request["name"];
-        var customerEmail = Request["email"];
-        var customerRequest = Request["subject"];
-        var errorMessage = "";
-        var debuggingFlag = false;
-        if (customerEmail == null && customerName == null && customerRequest == null)
-        {
-        
+        stat = '@ViewData["status"]';
+      if (stat === 'b') {
+          $(".alert").show();
+          setTimeout(function () { $(".alert").hide(); }, 3000);
+          setTimeout(function () { window.location.href = '/About'; }, 3500);
+            
         }
-        else
-        {
-        try {
-            // Initialize WebMail helper
-            WebMail.SmtpServer = "smtp.gmail.com";
-            WebMail.SmtpPort = 587;
-            WebMail.UserName = "heryanakasih@gmail.com";
-            WebMail.Password = "teizluhdljeuzorf";
-            WebMail.From = "heryanakasih@gmail.com";
-            WebMail.EnableSsl = true;
-            // Send email
-            WebMail.Send(to: "heryanakasih@gmail.com",
-            subject: "Help request from - " + customerName + " [Email Address: " + customerEmail+"]",
-            body: customerRequest
-            );
-        }
-        catch (Exception ex ) {
-            errorMessage = ex.Message;
-        }
-    }
-    }
-    }
+
+   });
+
+  // ProcessReq();
 </script>
 
 <!--ALERT MESSAGE-->
@@ -303,6 +281,7 @@ input[type=submit]:hover {
     <strong>Success!</strong> Indicates a successful or positive action.
 
     <p>Sorry to hear that you are having trouble, <b>@customerName</b>.</p>
+    
     @if (errorMessage == "")
     {
       <p>An email message has been sent to our customer service
@@ -316,10 +295,10 @@ input[type=submit]:hover {
            correct settings for the SMTP server name, a user name, 
            a password, and a "from" address.
         </p>
-        if (debuggingFlag)
+        if (ViewData["debuggingFlag"] != null)
         {
             <p>The following error was reported:</p>
-            <p><em>@errorMessage</em></p>
+            <p><em>@ViewData["errorMessage"]</em></p>
         }
     }
 
