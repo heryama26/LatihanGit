@@ -46,13 +46,18 @@ namespace Latihan.Controllers
             ViewData["status"] = "a";
             string customerName = name;
             ViewData["customerName"] = customerName;
+
             string customerEmail = email;
+
             string customerRequest = subject;
             ViewData["customerRequest"] = customerRequest;
+
             string errorMessage = "";
             ViewData["errorMessage"] = errorMessage;
+
             string debuggingFlag = null;
             ViewData["debuggingFlag"] = debuggingFlag;
+
             if (customerEmail == null && customerName == null && customerRequest == null)
             {
                 ViewData["status"] = "a";

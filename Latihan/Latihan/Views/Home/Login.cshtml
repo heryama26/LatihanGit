@@ -1,0 +1,110 @@
+﻿@using Latihan.Models;
+
+@{
+    ViewBag.Title = "Login";
+    List<UserProfile> ListDataUser = (List<UserProfile>)ViewData["ListDataUser"];
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+body {
+  background-color: #f1f1f1;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Center website */
+.main {
+  max-width: 1000px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 50px;
+  word-break: break-all;
+}
+
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  color: white;
+  padding: 10px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 280px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.cancelbtn {
+  width: auto;
+  padding: 10px 30px;
+  background-color: #f44336;
+}
+
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+span.psw {
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+</style>
+
+<h2>Login Form</h2>
+
+<form action="/Home" method="post">
+  <div class="imgcontainer">
+    @*<img src="img_avatar2.png" alt="Avatar" class="avatar">*@
+  </div>
+
+  <div class="container">
+    <div>
+        <input type="text" placeholder="Enter Username" name="uname" required>
+    </div>
+    <div>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+    </div>  
+    <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+    </label>
+    <div>
+        <button class="btn-primary" type="submit">Login</button>
+    </div>
+    <span class="psw">Forgot <a href="#">password?</a></span>
+  </div>
+
+  @*<div class="container" style="background-color:#f1f1f1">
+    <button type="button" class="cancelbtn">Cancel</button>
+  </div>*@
+</form>
