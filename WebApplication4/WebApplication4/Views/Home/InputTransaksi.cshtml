@@ -1,0 +1,205 @@
+﻿@using WebApplication4.Models;
+
+@{
+    ViewBag.Title = "InputTransaksi";
+    List<Transaksi> DataTransaksi = (List<Transaksi>)ViewData["DataTransaksi"];
+
+}
+
+<h2>Input Transaksi</h2>
+
+<style>
+    .HoverTransaksi {
+        background: rgba(0,0,0,.4);
+        /*cursor:pointer;*/
+        display: none;
+        height: 100%;
+        position: fixed;
+        text-align: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10000;
+    }
+
+        .HoverTransaksi > div {
+            background-color: #fff;
+            box-shadow: 10px 10px 60px #555;
+            display: inline-block;
+            height: auto;
+            /*max-width: 700px;*/
+            min-height: 100px;
+            vertical-align: middle;
+            /*width: 60%;*/
+            position: relative;
+            border-radius: 8px;
+            padding: 15px 5%;
+        }
+
+    .popupCloseButton {
+        background-color: #fff;
+        border: 3px solid #999;
+        border-radius: 50px;
+        cursor: pointer;
+        display: inline-block;
+        font-family: arial;
+        font-weight: bold;
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 25px;
+        line-height: 30px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+    }
+
+        .popupCloseButton:hover {
+            background-color: #ccc;
+        }
+
+    .HoverTransaksi .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="row" style="text-align: left;padding-right: 10px; padding-top: 5px;">
+    <button type="button" id="btnAddTransaksi" class="btn btn-primary">Tambah Transaksi</button>
+    @*<button type="button" id="btnBack" class="btn btn-danger">Back</button>*@
+</div>
+
+<div class="row" style="padding-right: 10px; padding-top: 5px;">
+    <table class="table table-stripped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center" style="font-weight: bold;">NO</th>
+                <th class="text-center" style="font-weight: bold;">AccountId</th>
+                <th class="text-center" style="font-weight: bold;">Transaction Date</th>
+                <th class="text-center" style="font-weight: bold;">Description</th>
+                <th class="text-center" style="font-weight: bold;">Debit Credit</th>
+                <th class="text-center" style="font-weight: bold;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (DataTransaksi != null && DataTransaksi.Count != 0)
+            {
+                foreach (Transaksi a in DataTransaksi)
+                {
+                    <tr>
+                        <td class="text-center" style="font-size:11px">@a.NO</td>
+                        <td class="text-center" style="font-size:11px">@a.AccountId</td>
+                        <td class="text-center" style="font-size:11px">@a.TransactionDate</td>
+                        <td class="text-center" style="font-size:11px">@a.Description</td>
+                        <td class="text-center" style="font-size:11px">@a.DebitCreditStatus</td>
+                        <td class="text-center" style="font-size:11px">@a.Amount</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="13"> No Data Found</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<div class="HoverTransaksi" hidden>
+    <span class="helper"></span>
+    <div style="width:1000px">
+        <div class="popupCloseButton">&times;</div>
+        <label style="font-weight: bold;">Tambah Data Baru</label>
+        <div class="row form-group">
+            <form>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Account Id</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="AccountId" placeholder="Account Id">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Transaction Date</label>
+                    <div class="col-sm-6">
+                        <input type="date" class="form-control" id="TransactionDate" placeholder="Transaction Date">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Description</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Description" placeholder="Description">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Debit Credit Status</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="DebitCreditStatus" placeholder="Debit Credit Status">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Amount</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="Amount" placeholder="Amount">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" id="btnSaveTransaksi" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.3.1.js")"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnAddTransaksi').click(function () {
+            $('.HoverTransaksi').show();
+        });
+
+        $('.popupCloseButton').click(function () {
+            $('.HoverTransaksi').hide();
+        });
+    });
+
+    $('#btnSaveTransaksi').click(function () {
+
+        if ($('#AccountId').val() == '' || $('#AccountId').val() == null) {
+            alert("Account Id tidak boleh kosong");
+            return;
+        }
+
+        if ($("#TransactionDate").val() == '' || $("#TransactionDate").val() == null) {
+            alert("Transaction Date tidak boleh kosong");
+            return;
+        }
+        $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveInputTransaksi", "Home")',
+                        data: {
+                            accId: $("#AccountId").val(),
+                            TransactionDate: $("#TransactionDate").val(),
+                            Description: $("#Description").val(),
+                            DebitCreditStatus: $("#DebitCreditStatus").val(),
+                            Amount: $("#Amount").val(),
+                        },
+                        dataType: 'html',
+                        success: function (data) {
+                            //alert("sukses");
+                            console(data);
+                        },
+                        error: function () {
+                            //alert("error");
+                            //console(result);
+                            //console(data);
+                        }
+        });
+        return;
+    });
+
+</script>

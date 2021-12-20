@@ -1,0 +1,122 @@
+﻿@using WebApplication4.Models;
+@{
+    ViewBag.Title = "Report";
+    List<Report> DataReport = (List<Report>)ViewData["DataReport"];
+
+}
+<div class="row" id="ReportGrid" style="padding-right: 10px; padding-top: 5px;">
+
+<h2>Report</h2>
+
+<form role="form" class="form-horizontal" id="searchForm" method="post" action="">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="form-group form-group-xs">
+                <div class="form-group form-group-xs">
+                    <label class="col-xs-4 col-sm-3 col-md-4 control-label text-muted">Account id</label>
+                    <div class="col-xs-8 col-sm-9 col-md-8">
+                        <div class="input-group input-group-xs">
+                            <input class="form-control" id="txtSearchAccountid" type="text" style="max-width: 150px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="form-group form-group-xs">
+                <div class="form-group form-group-xs">
+                    <label class="col-xs-4 col-sm-3 col-md-4 control-label text-muted">Start Date</label>
+                    <div class="col-xs-8 col-sm-9 col-md-8">
+                        <div class="input-group input-group-xs">
+                            <input class="form-control" id="txtSearchStartDT" type="date" style="max-width: 150px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-xs">
+                <div class="form-group form-group-xs">
+                    <label class="col-xs-4 col-sm-3 col-md-4 control-label text-muted">End Date</label>
+                    <div class="col-xs-8 col-sm-9 col-md-8">
+                        <div class="input-group input-group-xs">
+                            <input class="form-control" id="txtSearchEndDT" type="date" style="max-width: 150px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="text-right">
+                <button id="btnSearch" type="button" class="btn btn-xs btn-primary" onclick="btnSearch_onClick()">Search</button>
+                <button id="btnReset" type="reset" class="btn btn-xs btn-default" onclick="btnClear_onClick()">Clear</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="line-br"></div>
+
+
+    <table class="table table-stripped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center" style="font-weight: bold;">NO</th>
+                <th class="text-center" style="font-weight: bold;">Transaction Date</th>
+                <th class="text-center" style="font-weight: bold;">Description</th>
+                <th class="text-center" style="font-weight: bold;">Credit</th>
+                <th class="text-center" style="font-weight: bold;">Debit</th>
+                <th class="text-center" style="font-weight: bold;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (DataReport != null && DataReport.Count != 0)
+            {
+                foreach (Report a in DataReport)
+                {
+                    <tr>
+                        <td class="text-center" style="font-size:11px">@a.NO</td>
+                        <td class="text-center" style="font-size:11px">@a.TransactionDate</td>
+                        <td class="text-center" style="font-size:11px">@a.Description</td>
+                        <td class="text-center" style="font-size:11px">@a.Credit</td>
+                        <td class="text-center" style="font-size:11px">@a.Debit</td>
+                        <td class="text-center" style="font-size:11px">@a.Amount</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="13"> No Data Found</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.3.1.js")"></script>
+
+<script>
+    function btnSearch_onClick() {
+       $.ajax({
+                type: "POST",
+                url: '@Url.Action("Report", "Home")',
+                data: {
+                    Accid: $("#txtSearchAccountid").val(),
+                    statdt: $("#txtSearchStartDT").val(),
+                    enddt: $("#txtSearchEndDT").val(),
+                },
+                success: function (data) {
+                    $("#ReportGrid").html(data);
+                },
+                error: function (data) {
+                }
+            });
+    }
+</script>

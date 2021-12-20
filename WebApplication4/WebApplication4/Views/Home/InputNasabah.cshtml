@@ -1,0 +1,178 @@
+﻿@using WebApplication4.Models;
+@{
+    ViewBag.Title = "InputNasabah";
+    List<Nasabah> DataNasabah = (List<Nasabah>)ViewData["DataNasabah"];
+
+}
+
+<h2>Input Nasabah</h2>
+
+
+<style>
+    .HoverNasabah {
+        background: rgba(0,0,0,.4);
+        /*cursor:pointer;*/
+        display: none;
+        height: 100%;
+        position: fixed;
+        text-align: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10000;
+    }
+
+        .HoverNasabah > div {
+            background-color: #fff;
+            box-shadow: 10px 10px 60px #555;
+            display: inline-block;
+            height: auto;
+            /*max-width: 700px;*/
+            min-height: 100px;
+            vertical-align: middle;
+            /*width: 60%;*/
+            position: relative;
+            border-radius: 8px;
+            padding: 15px 5%;
+        }
+
+    .popupCloseButton {
+        background-color: #fff;
+        border: 3px solid #999;
+        border-radius: 50px;
+        cursor: pointer;
+        display: inline-block;
+        font-family: arial;
+        font-weight: bold;
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 25px;
+        line-height: 30px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+    }
+
+        .popupCloseButton:hover {
+            background-color: #ccc;
+        }
+
+    .HoverNasabah .helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="row" style="text-align: left;padding-right: 10px; padding-top: 5px;">
+    <button type="button" id="btnAddNasabah" class="btn btn-primary">Tambah Nasabah</button>
+    @*<button type="button" id="btnBack" class="btn btn-danger">Back</button>*@
+</div>
+
+<div class="row" style="padding-right: 10px; padding-top: 5px;">
+    <table class="table table-stripped table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center" style="font-weight: bold;">NO</th>
+                <th class="text-center" style="font-weight: bold;">AccountId</th>
+                <th class="text-center" style="font-weight: bold;">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (DataNasabah != null && DataNasabah.Count != 0)
+            {
+                foreach (Nasabah a in DataNasabah)
+                {
+                    <tr>
+                        <td class="text-center" style="font-size:11px">@a.NO</td>
+                        <td class="text-center" style="font-size:11px">@a.AccountId</td>
+                        <td class="text-center" style="font-size:11px">@a.Name</td>
+                    </tr>
+                }
+            }
+            else
+            {
+            <tr>
+                <td colspan="13"> No Data Found</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="HoverNasabah row" hidden>
+    <span class="helper"></span>
+    <div style="width:500px">
+        <div class="popupCloseButton">&times;</div>
+        <label style="font-weight: bold;">Tambah Data Baru</label>
+        <div class="row form-group">
+            <form>
+                <div class="form-group row">
+                    <label for="inputaccountid" class="col-sm-4 col-form-label">Account Id</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="AccountId" placeholder="Account Id">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputnama" class="col-sm-4 col-form-label">Nama</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="NamaNasabah" placeholder="Nama Nasabah">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" id="btnSaveNasabah" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.3.1.js")"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnAddNasabah').click(function () {
+            $('.HoverNasabah').show();
+        });
+
+        $('.popupCloseButton').click(function () {
+            $('.HoverNasabah').hide();
+        });
+    });
+
+    $('#btnSaveNasabah').click(function () {
+
+        if ($('#AccountId').val() == '' || $('#AccountId').val() == null) {
+            alert("Account Id tidak boleh kosong");
+            return;
+        }
+
+        if ($("#NamaNasabah").val() == '' || $("#NamaNasabah").val() == null) {
+            alert("Nama Nasabah tidak boleh kosong");
+            return;
+        }
+        $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveInputNasabah", "Home")',
+                        data: {
+                            accId: $("#AccountId").val(),
+                            name: $("#NamaNasabah").val()
+                        },
+                        dataType: 'html',
+                        success: function (data) {
+                            //alert("sukses");
+                            console(data);
+
+                        },
+                        error: function () {
+                           // alert("error");
+                            console(data);
+                        }
+        });
+        return;
+    });
+
+</script>
